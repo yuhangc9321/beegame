@@ -6,20 +6,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.3/p5.js"></script>
 
     <script>
+        // x position of the bee
         var x;
+        // y position of the bee
         var y;
+        // speed of the bee in the y direction
         var yspeed;
+        // x position of the flower
         var flowerx;
+        // y position of the flower
         var flowery;
+        // how many flowers the bee has gotten
         var score;
+        // how much time is left
         var timer;
+        // variable holding plural s for the number of pollinated flowers
         var plural;
 
         function setup() {
             createCanvas(500, 500);
+            
             x = 250;
             y = 475;
             yspeed = 0;
+            // starts the flower in a random place
             flowerx = random(50, 450);
             flowery = random(50, 450);
             score = 0;
@@ -28,48 +38,66 @@
         }
 
         function draw() {
+            // clears the background
             background(0, 0, 0);
-
+            
+            // draws the yellow bee
             rectMode(CENTER);
-            fill(255, 255, 0)
-            rect(x, y, 50, 50)
+            fill(255, 255, 0);
+            rect(x, y, 50, 50);
             
-            rect(flowerx, flowery, 100, 100)
+            // draws the red flower
+            fill(255, 0, 0);
+            rect(flowerx, flowery, 100, 100);
+            fill(0, 0, 0);
             
+            // displays the score and the time left
             fill(255, 255, 255)
             textSize(20);
             text("Score: " + score, 220, 250);
             text("Time left: " + timer, 210, 300);
             
+            // changes the y value of the bee by the y speed
             y += yspeed;
+            
+            // the timer counts down by 1 every second
             if (frameCount%60 == 1) {
                 timer --;
             }
             
+            // the speed upwards caused by jumping is decreased every frame to simulate gravity
             if (yspeed < 10) {
                 yspeed += 1;
             }
             
+            // keeps the bee inside the canvas
             x = constrain(x, 25, 475);
             y = constrain(y, 25, 475);
-
+            
+            // moves the bee right when the right arrow is pressed
             if (keyIsDown(RIGHT_ARROW)) {
                 x += 5;
             }
 
+            // moves the bee left when the left arrow is pressed
             if (keyIsDown(LEFT_ARROW)) {
                 x -= 5;
             }
-
+            
+            // when the bee touches the flower...
             if (x >= flowerx - 50 && x <= flowerx + 50 && y >= flowery - 50 && y <= flowery + 50) {
+                //gives the flower a new random position
                 flowerx = random(50, 450);
+                //increases the player's score by 1
                 flowery = random(50, 450);
                 score += 1;
             }
+            // if the score is greater than 1, give the end screen sentence a plural s
             if (score > 1) {
                 plural = "s!"
             }
             
+            // if the time runs out and the score does not reach or pass 30, present the game over screen
             if (timer == 0 && score < 30) {
                 noLoop()
                 background(200, 0, 0)
@@ -77,6 +105,7 @@
                 text("You only pollinated " + score + " flower" + plural, 140, 300);
             }
             
+            // if the time runs out and the score reaches or passes 30, present the win screen
             if (timer == 0 && score >= 30) {
                 noLoop()
                 background(0,200,200)
@@ -84,7 +113,8 @@
                 text("Your bee pollinated " + score + " flower" + plural, 130, 300);
             }
         }
-
+        
+        // when z is pressed, make the bee jump
         function keyPressed() {
             if (key == "Z") {
                 yspeed = -10;
