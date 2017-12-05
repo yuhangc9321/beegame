@@ -4,14 +4,91 @@
 <head>
     <title>p5js Template</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.3/p5.js"></script>
-    
+
     <script>
+        var x;
+        var y;
+        var yspeed;
+        var flowerx;
+        var flowery;
+        var score;
+        var timer;
+        var plural;
+
         function setup() {
-            createCanvas(800,600);
+            createCanvas(500, 500);
+            x = 250;
+            y = 475;
+            yspeed = 0;
+            flowerx = random(50, 450);
+            flowery = random(50, 450);
+            score = 0;
+            timer = 30;
+            plural = "!"
         }
 
         function draw() {
+            background(0, 0, 0);
+
+            rectMode(CENTER);
+            fill(255, 255, 0)
+            rect(x, y, 50, 50)
             
+            rect(flowerx, flowery, 100, 100)
+            
+            fill(255, 255, 255)
+            textSize(20);
+            text("Score: " + score, 220, 250);
+            text("Time left: " + timer, 210, 300);
+            
+            y += yspeed;
+            if (frameCount%60 == 1) {
+                timer --;
+            }
+            
+            if (yspeed < 10) {
+                yspeed += 1;
+            }
+            
+            x = constrain(x, 25, 475);
+            y = constrain(y, 25, 475);
+
+            if (keyIsDown(RIGHT_ARROW)) {
+                x += 5;
+            }
+
+            if (keyIsDown(LEFT_ARROW)) {
+                x -= 5;
+            }
+
+            if (x >= flowerx - 50 && x <= flowerx + 50 && y >= flowery - 50 && y <= flowery + 50) {
+                flowerx = random(50, 450);
+                flowery = random(50, 450);
+                score += 1;
+            }
+            if (score > 1) {
+                plural = "s!"
+            }
+            
+            if (timer == 0 && score < 30) {
+                noLoop()
+                background(200, 0, 0)
+                text("You doomed the Earth!", 160, 250)
+                text("You only pollinated " + score + " flower" + plural, 140, 300);
+            }
+            
+            if (timer == 0 && score >= 30) {
+                noLoop()
+                background(0,200,200)
+                text("You saved the planet!", 160, 250);
+                text("Your bee pollinated " + score + " flower" + plural, 130, 300);
+            }
+        }
+
+        function keyPressed() {
+            if (key == "Z") {
+                yspeed = -10;
+            }
         }
     </script>
 </head>
